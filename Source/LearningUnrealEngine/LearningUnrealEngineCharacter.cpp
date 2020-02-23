@@ -10,6 +10,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Net/UnrealNetwork.h"
 #include "Engine/Engine.h"
+#include "LearningUnrealEngineProjectile.h"
 
 //////////////////////////////////////////////////////////////////////////
 // ALearningUnrealEngineCharacter
@@ -51,6 +52,42 @@ ALearningUnrealEngineCharacter::ALearningUnrealEngineCharacter()
 	// Initialize the player's health
 	MaxHealth = 100.0f;
 	CurrentHealth = MaxHealth;
+
+	// Initialize projectile class
+	ProjectileClass = ALearningUnrealEngineProjectile::StaticClass();
+
+	// Initialize fire rate
+	FireRate = 0.25f;
+	bIsFiringWeapon = false;
+}
+
+void ALearningUnrealEngineCharacter::StartFire()
+{
+	if (!bIsFiringWeapon)
+	{
+		bIsFiringWeapon = true;
+
+		UWorld* World = GetWorld();
+		World->GetTimerManager().SetTimer(FiringTimer, this, &ALearningUnrealEngineCharacter::StopFire, FireRate, false);
+		HandleFire();
+	}
+}
+
+void ALearningUnrealEngineCharacter::StopFire()
+{
+	bIsFiringWeapon = false;
+}
+
+void ALearningUnrealEngineCharacter::HandleFire_Implementation()
+{
+	FVector spawnLocation = GetActorLocation() + (GetControlRotation().Vector() * 100.0f) + (GetActorUpVector() * 50.0f);
+	FRotator spawnRotation = GetControlRotation();
+
+	FActorSpawnParameters spawnParameters;
+	spawnParameters.Instigator = Instigator;
+	spawnParameters.Owner = this;
+
+	ALearningUnrealEngineProjectile* spawnedProjectile = GetWorld()->SpawnActor<ALearningUnrealEngineProjectile>(spawnLocation, spawnRotation, spawnParameters);
 }
 
 void ALearningUnrealEngineCharacter::SetCurrentHealth(float healthValue)
@@ -141,6 +178,9 @@ void ALearningUnrealEngineCharacter::SetupPlayerInputComponent(class UInputCompo
 
 	// VR headset functionality
 	PlayerInputComponent->BindAction("ResetVR", IE_Pressed, this, &ALearningUnrealEngineCharacter::OnResetVR);
+
+	// Handle firing projectiles
+	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &ALearningUnrealEngineCharacter::StartFire);
 }
 
 

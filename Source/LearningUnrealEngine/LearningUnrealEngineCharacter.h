@@ -37,7 +37,7 @@ public:
 	FORCEINLINE float GetMaxHealth() const { return MaxHealth; }
 
 	/** Getter for Current Health. */
-	UFUNCTION(BlueprintPure, Categroy = "Health")
+	UFUNCTION(BlueprintPure, Category = "Health")
 	FORCEINLINE float GetCurrentHealth() const { return CurrentHealth; }
 
 	/** Setter for Current Health. Clamps the value between 0 and MaxHealth and calls OnHealthUpdate. SHould only be called on the server. */
@@ -91,6 +91,31 @@ protected:
 
 	/** Handler for when a touch input stops. */
 	void TouchStopped(ETouchIndex::Type FingerIndex, FVector Location);
+
+	UPROPERTY(EditDefaultsOnly, Category = "Gameplay|Projectile")
+	TSubclassOf<class ALearningUnrealEngineProjectile> ProjectileClass;
+
+	/** Delay between shots in seconds. Used to control fire rate for our test projectile, but also to prevent an overflow of server functions from binding SpawnProjectile directly to input. */
+	UPROPERTY(EditDefaultsOnly, Category = "Gameplay")
+	float FireRate;
+
+	/** If true, we are in the process of firing projectiles. */
+	bool bIsFiringWeapon;
+
+	/** Function for beginning weapon fire. */
+	UFUNCTION(BlueprintCallable, Category = "Gameplay")
+	void StartFire();
+
+	/** Function for ending weapon fire. Once this is called, the player can use StartFire again */
+	UFUNCTION(BlueprintCallable, Category = "Gameplay")
+	void StopFire();
+
+	/** Server function for spawning projectiles. */
+	UFUNCTION(Server, Reliable)
+	void HandleFire();
+
+	/** A timer handle used for providing the fire rate delay in-between spawns. */
+	FTimerHandle FiringTimer;
 
 protected:
 	// APawn interface
