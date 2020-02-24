@@ -4,7 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "Misc/FilterCollection.h"
 #include "LearningUnrealEngineCharacter.generated.h"
+
+DECLARE_DYNAMIC_DELEGATE(FOnHealthChangedDelegate)
 
 UCLASS(config=Game)
 class ALearningUnrealEngineCharacter : public ACharacter
@@ -43,6 +46,9 @@ public:
 	/** Setter for Current Health. Clamps the value between 0 and MaxHealth and calls OnHealthUpdate. SHould only be called on the server. */
 	UFUNCTION(BlueprintCallable, Category = "Health")
 	void SetCurrentHealth(float healthValue);
+
+	/** Raised when health is changed */
+	FOnHealthChangedDelegate& OnHealthChanged() { return onHealthChangedEvent; }
 
 	/** Event for taking damage. Overriden from APawn, */
 	UFUNCTION(BlueprintCallable, Category = "Health")
@@ -91,6 +97,9 @@ protected:
 
 	/** Handler for when a touch input stops. */
 	void TouchStopped(ETouchIndex::Type FingerIndex, FVector Location);
+
+	UPROPERTY(BlueprintAssignable)
+	FOnHealthChangedDelegate onHealthChangedEvent;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Gameplay|Projectile")
 	TSubclassOf<class ALearningUnrealEngineProjectile> ProjectileClass;
