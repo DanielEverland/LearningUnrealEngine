@@ -26,7 +26,7 @@ public:
 	// Movement component for handling projectile movement.
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	class UProjectileMovementComponent* ProjectileMovementComponent;
-
+	
 	// Particle used when projectile impacts against another object and explodes.
 	UPROPERTY(EditAnywhere, Category = "Effects")
 	class UParticleSystem* ExplosionEffect;
