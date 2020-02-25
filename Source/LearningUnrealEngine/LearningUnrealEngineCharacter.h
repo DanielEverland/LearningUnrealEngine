@@ -46,16 +46,16 @@ public:
 	/** Setter for Current Health. Clamps the value between 0 and MaxHealth and calls OnHealthUpdate. SHould only be called on the server. */
 	UFUNCTION(BlueprintCallable, Category = "Health")
 	void SetCurrentHealth(float healthValue);
-
-	/** Raised when health is changed */
-	UFUNCTION(BlueprintImplementableEvent, Category = "Test")
-	void MyTestEvent();
-	
+		
 	/** Event for taking damage. Overriden from APawn, */
 	UFUNCTION(BlueprintCallable, Category = "Health")
 	float TakeDamage(float damageTaken, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
 
 protected:
+
+	/** Raised when health is changed */
+	UFUNCTION(BlueprintImplementableEvent, Category = "Test")
+	void MyTestEvent();
 
 	/** The player's maximum health. This is the highest that their health can be, and the value that their health starts at when spawned.*/
 	UPROPERTY(EditDefaultsOnly, Category = "Health")
