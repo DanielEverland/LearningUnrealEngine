@@ -7,8 +7,6 @@
 #include "Misc/FilterCollection.h"
 #include "LearningUnrealEngineCharacter.generated.h"
 
-DECLARE_DYNAMIC_DELEGATE(FOnHealthChangedDelegate)
-
 UCLASS(config=Game)
 class ALearningUnrealEngineCharacter : public ACharacter
 {
@@ -23,6 +21,8 @@ class ALearningUnrealEngineCharacter : public ACharacter
 	class UCameraComponent* FollowCamera;
 public:
 	ALearningUnrealEngineCharacter();
+
+	DECLARE_EVENT(ALearningUnrealEngineCharacter, FHealthChangedEvent)
 
 	/** Property replication */
 	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
@@ -48,8 +48,9 @@ public:
 	void SetCurrentHealth(float healthValue);
 
 	/** Raised when health is changed */
-	FOnHealthChangedDelegate& OnHealthChanged() { return onHealthChangedEvent; }
-
+	UFUNCTION(BlueprintImplementableEvent, Category = "Test")
+	void MyTestEvent();
+	
 	/** Event for taking damage. Overriden from APawn, */
 	UFUNCTION(BlueprintCallable, Category = "Health")
 	float TakeDamage(float damageTaken, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
@@ -97,10 +98,7 @@ protected:
 
 	/** Handler for when a touch input stops. */
 	void TouchStopped(ETouchIndex::Type FingerIndex, FVector Location);
-
-	UPROPERTY(BlueprintAssignable)
-	FOnHealthChangedDelegate onHealthChangedEvent;
-
+	
 	UPROPERTY(EditDefaultsOnly, Category = "Gameplay|Projectile")
 	TSubclassOf<class ALearningUnrealEngineProjectile> ProjectileClass;
 

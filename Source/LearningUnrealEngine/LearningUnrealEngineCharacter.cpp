@@ -150,7 +150,7 @@ void ALearningUnrealEngineCharacter::OnHealthUpdate()
 		Any special functionality that should occur as a result of damage or death should be placed here.
 	*/
 
-	onHealthChangedEvent.Broadcast();
+	MyTestEvent();
 }
 
 //////////////////////////////////////////////////////////////////////////
