@@ -54,8 +54,8 @@ public:
 protected:
 
 	/** Raised when health is changed */
-	UFUNCTION(BlueprintImplementableEvent, Category = "Test")
-	void MyTestEvent();
+	UFUNCTION(BlueprintImplementableEvent, Category = "Health")
+	void OnHealthChanged();
 
 	/** The player's maximum health. This is the highest that their health can be, and the value that their health starts at when spawned.*/
 	UPROPERTY(EditDefaultsOnly, Category = "Health")
